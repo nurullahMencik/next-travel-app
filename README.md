@@ -1,8 +1,11 @@
 #  Travel App
 
-
-
 TaskAPP Travel App, kullanıcıların dünya genelindeki otelleri keşfetmelerine, detaylı filtreleme seçenekleriyle aramalarını daraltmalarına ve aradıkları konaklama birimlerini kolayca görüntülemelerine olanak tanıyan modern ve yüksek performanslı bir web uygulamasıdır. Next.js'in App Router mimarisi sayesinde, hızlı yükleme süreleri ve üst düzey SEO uyumluluğu ile kesintisiz bir kullanıcı deneyimi sunarız.
+
+## Canlı adres 
+Projenin çalışan halini incelemek için aşağıdaki linki ziyaret edebilirsiniz:
+
+Canlı Site: https://taskapp-next-yeni.vercel.app
 
 
 ## Özellikler
