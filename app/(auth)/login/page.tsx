@@ -54,6 +54,7 @@ const LoginPage = () => {
 
     if(res?.error){
       setError("Invalid email or password")
+      setState(false)
     }else{
       router.push("/")
       setState(false)

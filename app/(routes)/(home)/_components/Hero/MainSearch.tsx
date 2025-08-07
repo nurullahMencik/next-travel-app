@@ -25,7 +25,7 @@ const MainSearch = () => {
     router.push(`/search?${query}`)
   }
   return (
-     <div className='absolute z-50 left-1/2 transform -translate-x-1/2 top-[740px] md:top-[760px]
+     <div className='absolute z-50 left-1/2 transform -translate-x-1/2 top-[850px] md:top-[760px]
      lg:top-[380px]  container px-8'>
       <div className='bg-white shadow-lg py-10 px-2 lg:px-24 rounded-md lg:rounded-full flex flex-col
       mt-12 lg:mt-24 lg:flex-row items-center justify-between p-4 gap-3'>

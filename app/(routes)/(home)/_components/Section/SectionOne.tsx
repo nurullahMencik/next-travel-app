@@ -1,5 +1,5 @@
 "use client";
-import { motion, Transition, Easing } from "framer-motion"; // Easing'i import ettik
+import { motion, Transition, Easing } from "framer-motion"; 
 import Image from "next/image";
 import React from "react";
 
@@ -17,7 +17,7 @@ const fadeInVariants = {
 };
 const SectionOne = () => {
   return (
-    <div className="mx-auto container lg:mt-8 md:mt-44 mt-64">
+    <div className="mx-auto container lg:mt-8 md:mt-44 mt-96">
       <div className="flex flex-col md:flex-row gap-8 px-3 lg:px-28">
         <motion.div
           className="group overflow-hidden relative"

@@ -9,9 +9,9 @@ const SectionTwo = () => {
       <div className="mx-auto container text-center py-16 px-6 lg:px-28">
         <TypeAnimation
           sequence={[
-            // Same substring at the start will only be typed out once, initially
+          
             "WELCOME TO TRENDY TRAVEL",
-            2000, // wait 1s before replacing "Mice" with "Hamsters"
+            2000, 
             "SEYEHATE HOŞGELDİNİZ",
             2000,
             "WILLKOMMEN BEI TRENDY TRAVEL",
