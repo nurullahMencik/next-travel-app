@@ -6,7 +6,7 @@ TaskAPP Travel App, kullanıcıların dünya genelindeki otelleri keşfetmelerin
 Projenin çalışan halini incelemek için aşağıdaki linki ziyaret edebilirsiniz:
 
 * **Canlı Site**: https://taskapp-next-yeni.vercel.app
-* **Hızlı Giriş**admin@gmail.com / 123456
+* **Hızlı Giriş**: admin@gmail.com / 123456
 
 
 ## Özellikler
@@ -127,3 +127,4 @@ LinkedIn: https://www.linkedin.com/in/nurullah-mencik-6b692a216
 
 
 Kişisel Web Sitesi/Portfolyo: http://konyaereglisatis.com/portfolio
+
