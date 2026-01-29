@@ -126,5 +126,6 @@ GitHub: https://github.com/nurullahMencik
 LinkedIn: https://www.linkedin.com/in/nurullah-mencik-6b692a216
 
 
-Kişisel Web Sitesi/Portfolyo: http://konyaereglisatis.com/portfolio
+Kişisel Web Sitesi: https://www.nurullahmencik.com
+
 
