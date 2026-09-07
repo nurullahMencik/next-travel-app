@@ -25,7 +25,7 @@ const RegisterSchema = z.object({
     .min(1, "email is required")
     .email("please enter a validation"),
   username: z.string().min(1, "username is required"),
-  password: z.string().min(1, "password must be at least 6 characters."),
+  password: z.string().min(6, "password must be at least 6 characters."),
   firstName: z.string().min(1, "first name is required."),
   lastName: z.string().min(1, "last name is required"),
 });
@@ -41,11 +41,11 @@ const RegisterPage = () => {
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
-      email: "test@gmail.com",
-      username: "test",
-      password: "123456",
-      firstName: "test",
-      lastName: "test",
+      email: "",
+      username: "",
+      password: "",
+      firstName: "",
+      lastName: "",
     },
   });
 
@@ -53,7 +53,6 @@ const RegisterPage = () => {
   setError("");
   setSuccess("");
   setState(true)
-  console.log(data);
 
   try {
     const response = await fetch("/api/auth/register", {
@@ -160,7 +159,7 @@ const RegisterPage = () => {
             </div>
 
             <div className="flex flex-row items-center justify-between">
-              <Button type={state ?"button":"submit"}>{state ? "Loading" : "Register"}</Button>
+              <Button type="submit" disabled={state}>{state ? "Loading" : "Register"}</Button>
               <Link
                 href="/login"
                 className="font-bold text-sm text-blue-500 hover:text-blue-800"

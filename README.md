@@ -9,6 +9,40 @@ Projenin çalışan halini incelemek için aşağıdaki linki ziyaret edebilirsi
 * **Hızlı Giriş**: admin@gmail.com / 123456
 
 
+## Kurulum
+
+```bash
+git clone https://github.com/nurullahMencik/next-travel-app.git
+cd next-travel-app
+npm install
+cp .env.example .env      # degerleri doldurun
+npm run db:push           # Prisma semasini veritabanina uygular
+npm run db:seed           # demo kullanici + otel verilerini yukler
+npm run dev
+```
+
+### Ortam Degiskenleri
+
+Tum degiskenlerin aciklamasi `.env.example` dosyasindadir. Uygulamanin
+calismasi icin **zorunlu** olanlar:
+
+| Degisken | Aciklama |
+| --- | --- |
+| `DATABASE_URL` | MongoDB baglanti adresi. Prisma'nin MongoDB connector'u replica set ister; MongoDB Atlas bunu varsayilan olarak saglar. |
+| `NEXTAUTH_SECRET` | Oturum imzalama anahtari. `openssl rand -base64 32` ile uretilir. |
+| `NEXTAUTH_URL` | Uygulamanin tam adresi (yerelde `http://localhost:3000`, canlida `https://<proje>.vercel.app`). |
+
+Opsiyonel: `RESEND_API_KEY`, `RECAPTCHA_SECRET_KEY`, `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`.
+Bunlar tanimli degilse iletisim formu devre disi kalir, uygulamanin geri kalani calisir.
+
+> **Not:** Giris islemleri veritabanina baglanamadiginda calismaz. Canli ortamda
+> giris yapilamiyorsa once `DATABASE_URL`'in gecerli oldugunu ve MongoDB Atlas
+> cluster'inin ayakta / IP erisim listesinin acik oldugunu kontrol edin.
+> `GET /api/hotels` adresinin 500 donmesi bu durumun en hizli gostergesidir.
+
+`npm run db:seed` komutu README'de belirtilen `admin@gmail.com / 123456` demo
+hesabini olusturur.
+
 ## Özellikler
 
 * **Detaylı Otel Arama:** Konum, tarih ve kişi sayısına göre otel arama imkanı.

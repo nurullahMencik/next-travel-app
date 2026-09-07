@@ -38,28 +38,37 @@ const LoginPage = () => {
   const form = useForm<loginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "test@gmail.com",
-      password: "123456",
+      email: "",
+      password: "",
     },
   });
 
   const onSubmit = async (data: loginFormValues) => {
-    setError("")
-    setState(true)
-    const res = await signIn("credentials",{
-      email:data.email,
-      password:data.password,
-      redirect:false
-    })
+    setError("");
+    setState(true);
 
-    if(res?.error){
-      setError("Invalid email or password")
-      setState(false)
-    }else{
-      router.push("/")
-      setState(false)
+    try {
+      const res = await signIn("credentials", {
+        email: data.email.trim().toLowerCase(),
+        password: data.password,
+        redirect: false,
+      });
+
+      // signIn ag hatasinda undefined donebiliyor; sadece res.error'a bakmak
+      // bu durumda kullaniciyi hatali sekilde ana sayfaya yonlendiriyordu.
+      if (!res || res.error || !res.ok) {
+        setError("E-posta veya sifre hatali.");
+        return;
+      }
+
+      router.push("/");
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      setError("Beklenmedik bir hata olustu. Lutfen tekrar deneyin.");
+    } finally {
+      setState(false);
     }
-
   };
   return (
     <div className="min-h-screen flex justify-center items-center p-4">
@@ -73,7 +82,7 @@ const LoginPage = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="email" {...field} />
                   </FormControl>
@@ -95,7 +104,7 @@ const LoginPage = () => {
               )}
             />
             <div className="flex flex-row items-center justify-between">
-              <Button type={"submit"}>{state ?"loading":"login"}</Button>
+              <Button type="submit" disabled={state}>{state ? "Loading" : "Login"}</Button>
               <Link
                 href="/register"
                 className="font-bold text-sm text-blue-500 hover:text-blue-800"

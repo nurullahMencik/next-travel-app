@@ -1,8 +1,13 @@
-import NextAuth, { AuthOptions } from "next-auth"; // AuthOptions tipini import et
+import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { prismadb } from "@/lib/db";
 
+if (!process.env.NEXTAUTH_SECRET) {
+  console.error(
+    "[auth] NEXTAUTH_SECRET tanimli degil. Oturum acma islemleri calismayacaktir."
+  );
+}
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -16,19 +21,26 @@ export const authOptions: AuthOptions = {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Missing email or password");
         }
-        console.log("Checking if user exists...");
 
-        const user = await prismadb.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
-        });
+        // Kayit sirasinda e-posta kucuk harfe cevriliyor; burada da ayni
+        // normalizasyon yapilmazsa "Admin@Gmail.com" ile giris basarisiz olur.
+        const email = credentials.email.trim().toLowerCase();
 
-        if (!user) {
+        let user;
+        try {
+          user = await prismadb.user.findUnique({ where: { email } });
+        } catch (error) {
+          // Veritabanina ulasilamadiginda gercek sebebi loglayalim, aksi halde
+          // kullaniciya yalnizca "Invalid email or password" donuyor ve
+          // sorunun kaynagi gorunmez oluyor.
+          console.error("[auth] database error:", error);
+          throw new Error("Database connection failed");
+        }
+
+        if (!user || !user.hashedPassword) {
           throw new Error("No user found with this email");
         }
-        //console.log("Prisma'dan gelen user nesnesi:", user); 
-        console.log("comparing password...");
+
         const isCorrectPassword = await bcrypt.compare(
           credentials.password,
           user.hashedPassword
@@ -37,41 +49,38 @@ export const authOptions: AuthOptions = {
         if (!isCorrectPassword) {
           throw new Error("Incorrect password");
         }
-        console.log("Login successful:", user);
 
         return {
           id: user.id,
-          email: user.email ?? '',
-          username: user.username ?? '',
-          firstName: user.firstName ?? '', 
-          lastName: user.lastName ?? '',
+          email: user.email ?? "",
+          username: user.username ?? "",
+          firstName: user.firstName ?? "",
+          lastName: user.lastName ?? "",
         };
       },
     }),
   ],
   callbacks: {
-    async jwt({token,user}){
-        if(user){
-            token.id = user.id;
-            token.username = user.username;
-            token.firstName = user.firstName;
-            token.lastName = user.lastName;
-        }
-         //console.log("JWT callback'indeki token:", token); 
-        return token
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.username = user.username;
+        token.firstName = user.firstName;
+        token.lastName = user.lastName;
+      }
+      return token;
     },
-    async session({session,token}){
-        if(session?.user){
-            session.user.id=token.id
-            session.user.email=token.email
-            session.user.username = token.username; 
-            session.user.firstName=token.firstName
-            session.user.lastName=token.lastName
-            session.user.token = token
-        }
-        //console.log("Session callback'indeki session:", session); 
-        return session;
-    }
+    async session({ session, token }) {
+      if (session?.user) {
+        session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.username = token.username;
+        session.user.firstName = token.firstName;
+        session.user.lastName = token.lastName;
+        session.user.token = token;
+      }
+      return session;
+    },
   },
   pages: {
     signIn: "/login",
@@ -81,5 +90,3 @@ export const authOptions: AuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
-
-export default NextAuth(authOptions);

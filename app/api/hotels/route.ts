@@ -1,6 +1,9 @@
 import { prismadb } from "@/lib/db";
 import { NextResponse } from "next/server";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 
 export async function GET(request:Request) {
      const { searchParams } = new URL(request.url);
@@ -36,9 +39,11 @@ export async function GET(request:Request) {
         
         return NextResponse.json(hotels);
 
-    } catch {
+    } catch (error) {
+        // Hatayi yutmak yerine logluyoruz; canli ortamda 500 alindiginda
+        // sebebin (ornegin veritabani baglantisi) gorulebilmesi icin gerekli.
+        console.error("hotels error:", error);
         return NextResponse.json({ error: "Something went wrong!" }, { status: 500 });
-
     }
     
-}
+}

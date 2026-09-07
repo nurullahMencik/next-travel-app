@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -17,7 +18,7 @@ function getHotelImages(hotelFolder) {
 
   return fs.readdirSync(hotelPath)
     .filter(file => file.endsWith('.jpg'))
-    .map(file => `/public/${hotelFolder}/${file}`);
+    .map(file => `/${hotelFolder}/${file}`);
 }
 
 // Rastgele fiyat üretme fonksiyonu
@@ -45,7 +46,34 @@ const amenitiesList = [
   'Balcony', 'Private Pool', 'Kitchen', 'Hot Tub'
 ];
 
+// Demo giris hesabi. README'de belirtilen admin@gmail.com / 123456 ile eslesir.
+async function seedDemoUser() {
+  const email = 'admin@gmail.com';
+  const hashedPassword = await bcrypt.hash('123456', 12);
+
+  await prisma.user.upsert({
+    where: { email },
+    update: { hashedPassword },
+    create: {
+      email,
+      username: 'admin',
+      photo: '',
+      firstName: 'Admin',
+      lastName: 'User',
+      hashedPassword,
+    },
+  });
+
+  console.log('Demo kullanici hazir: admin@gmail.com / 123456');
+}
+
 async function main() {
+  await seedDemoUser();
+
+  // Seed'in tekrar tekrar calistirilabilmesi icin once mevcut otel verisi silinir.
+  await prisma.room.deleteMany();
+  await prisma.hotel.deleteMany();
+
   const hotels = [
     {
       name: 'Grand Palace Hotel',
@@ -97,6 +125,8 @@ async function main() {
       });
     }
   }
+
+  console.log(`${hotels.length} otel ve odalari olusturuldu.`);
 }
 
 main()

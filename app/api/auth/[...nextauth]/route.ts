@@ -1,5 +1,9 @@
-import NextAuth from "next-auth"
-import  {authOptions}  from "./auth"
+import NextAuth from "next-auth";
+import { authOptions } from "./auth";
 
-const handler = NextAuth(authOptions)
-export {handler as GET,handler as POST}
+// Prisma ve bcrypt Node.js calisma zamani gerektirir.
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
