@@ -15,7 +15,12 @@ export const useHotelStore = create<HotelsState>((set) => ({
 
     url += "?" + params.toString();
     fetch(url)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const data = await res.json();
+        // API hata dondururse ({ error }) dizi gelmez; .map ile sayfanin cokmemesi icin hata durumuna gec
+        if (!res.ok || !Array.isArray(data)) throw new Error(data?.error || `HTTP ${res.status}`);
+        return data;
+      })
       .then((data) => {
         set({ hotels: data, loading: false });
       })
